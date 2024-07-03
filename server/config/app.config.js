@@ -13,6 +13,10 @@ config.database = {
   password: process.env.DB_PASSWORD,
   port: +process.env.DB_PORT,
   dialect: "postgres",
+  ssl: { 
+    require: true,
+    rejectUnauthorized: false
+  }
 };
 
 module.exports = config;
