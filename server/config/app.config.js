@@ -12,10 +12,11 @@ config.database = {
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   port: +process.env.DB_PORT,
-  dialect: "postgres",
-  ssl: { 
-    require: true,
-    rejectUnauthorized: false
+  dialect: process.env.DB_TYPE,
+  dialectOptions: {
+    ssl: {
+      require: process.env.NODE_ENV == "production" ? true : false,
+    }
   }
 };
 
