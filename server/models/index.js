@@ -10,8 +10,8 @@ const sequelize = new Sequelize(
     dialect: config.database.dialect,
     dialectOptions: {
       ssl: {
-        require: config.ssl.require,
-        rejectUnauthorized: config.ssl.rejectUnauthorized,
+        require: config.database.ssl.require,
+        rejectUnauthorized: config.database.ssl.rejectUnauthorized,
       }
     },
   }
