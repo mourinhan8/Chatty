@@ -86,7 +86,7 @@ async function init() {
   );
   const io = socket(server, {
     cors: {
-      origin: "http://localhost:3000",
+      origin: config.feUrl,
       credentials: true,
     },
   });

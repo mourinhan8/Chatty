@@ -33,4 +33,6 @@ config.app = {
   port: process.env.PORT || 4000
 };
 
+config.feUrl = process.env.FE_URL
+
 module.exports = config;
