@@ -13,11 +13,9 @@ config.database = {
   password: process.env.DB_PASSWORD,
   port: +process.env.DB_PORT,
   dialect: process.env.DB_TYPE,
-  dialectOptions: {
-    ssl: {
-      require: process.env.NODE_ENV == "production" ? true : false,
-      rejectUnauthorized: false
-    }
+  ssl: {
+    require: process.env.NODE_ENV == "production" ? true : false,
+    rejectUnauthorized: false
   }
 };
 
