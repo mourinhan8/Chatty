@@ -1,21 +1,8 @@
 const Sequelize = require("sequelize");
 const config = require("../config/app.config")
 
-const sequelize = new Sequelize(
-  config.database.database, 
-  config.database.username, 
-  config.database.password, 
-  {
-    host: config.database.host,
-    dialect: config.database.dialect,
-    dialectOptions: {
-      ssl: {
-        require: config.database.ssl.require,
-        rejectUnauthorized: config.database.ssl.rejectUnauthorized,
-      }
-    },
-  }
-);
+const databaseConfig = process.env.NODE_ENV == "production" ? config.database.production : config.database.dev
+const sequelize = new Sequelize(...databaseConfig);
 
 const db = {
   models: {}
