@@ -8,6 +8,12 @@ const sequelize = new Sequelize(
   {
     host: config.database.host,
     dialect: config.database.dialect,
+    dialectOptions: {
+      ssl: {
+        require: config.ssl.require,
+        rejectUnauthorized: config.ssl.rejectUnauthorized,
+      }
+    },
   }
 );
 
