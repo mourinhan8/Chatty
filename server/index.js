@@ -86,8 +86,9 @@ async function init() {
   );
   const io = socket(server, {
     cors: {
-      origin: config.feUrl,
-      credentials: true,
+      origin: '*',
+      // origin: config.feUrl,
+      // credentials: true,
     },
   });
 
