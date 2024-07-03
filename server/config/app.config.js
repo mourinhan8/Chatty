@@ -16,6 +16,7 @@ config.database = {
   dialectOptions: {
     ssl: {
       require: process.env.NODE_ENV == "production" ? true : false,
+      rejectUnauthorized: false
     }
   }
 };
