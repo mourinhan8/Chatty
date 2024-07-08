@@ -48,7 +48,7 @@ const CreateConversationModal = ({ isOpen, onClose, onSetConv, onSetType }) => {
     const fetchUsers = async () => {
       const { data } = await axios.get(`${allUsersRoute}/${currentUser.id}?username=${userQuery}`);
       const filteredResults = data.filter(
-        (user) => !selectedUsers.some((selectedUser) => selectedUser.username === user.username)
+        (user) => !selectedUsers.some((selectedUser) => selectedUser?.username === user?.username)
       );
       setSearchResults(filteredResults);
     };
@@ -66,14 +66,14 @@ const CreateConversationModal = ({ isOpen, onClose, onSetConv, onSetType }) => {
   const debounceOnchange = debounce(updateQuery, 1000);
 
   const handleAddUser = (user) => {
-    if (!selectedUsers.some((u) => u.username === user.username)) {
+    if (!selectedUsers.some((u) => u.username === user?.username)) {
       setSelectedUsers([...selectedUsers, user]);
-      setSearchResults(searchResults.filter(u => u.username !== user.username))
+      setSearchResults(searchResults.filter(u => u.username !== user?.username))
     }
   };
 
   const handleRemoveUser = (user) => {
-    setSelectedUsers(selectedUsers.filter((u) => u.username !== user.username));
+    setSelectedUsers(selectedUsers.filter((u) => u.username !== user?.username));
   };
 
   const handleSubmitCreateConversation = async () => {

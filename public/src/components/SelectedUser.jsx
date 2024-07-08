@@ -26,7 +26,7 @@ const RemoveButton = styled.button`
 const SelectedUser = ({ user, onRemove }) => {
   return (
     <UserContainer>
-      <UserName>{user.username}</UserName>
+      <UserName>{user?.username}</UserName>
       <RemoveButton onClick={() => onRemove(user)}>
         <FaTimes />
       </RemoveButton>

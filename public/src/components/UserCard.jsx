@@ -6,9 +6,9 @@ import { FaPlus } from 'react-icons/fa';
 const UserCard = ({ user, onAdd }) => {
   return (
     <CardContainer>
-      <Avatar src={user.avatar} alt={`${user.name}'s avatar`} />
+      <Avatar src={user?.avatar} alt={`${user?.name}'s avatar`} />
       <UserInfo>
-        <UserName>{user.username}</UserName>
+        <UserName>{user?.username}</UserName>
       </UserInfo>
       <AddButton onClick={() => onAdd(user)}>
         <FaPlus />
