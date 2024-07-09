@@ -8,8 +8,9 @@ module.exports.login = async (req, res, next) => {
   try {
     const { username, password } = req.body;
     const user = await models.User.findOne({ where: { username } });
-    if (!user)
+    if (!user) {
       throw new ErrorResponse("Incorrect Username or Password", 400);
+    }
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       throw new ErrorResponse("Incorrect Username or Password", 400);
@@ -27,11 +28,13 @@ module.exports.register = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
     const usernameCheck = await models.User.findOne({ where: { username } });
-    if (usernameCheck)
-      return res.json({ msg: "Username already used", status: false });
+    if (usernameCheck) {
+      throw new ErrorResponse("Username already used", 400);
+    }
     const emailCheck = await models.User.findOne({ where: { email } });
-    if (emailCheck)
-      return res.json({ msg: "Email already used", status: false });
+    if (emailCheck) {
+      throw new ErrorResponse("Email already used", 400);
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await models.User.create({
       email,
