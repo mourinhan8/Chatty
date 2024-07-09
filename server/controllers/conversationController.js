@@ -19,13 +19,13 @@ module.exports.singleConversation = async (req, res, next) => {
         type: "single",
       },
       include: [{
-        model: User,
+        model: models.User,
         through: {
           attributes: []
         },
         where: {
           id: {
-            [Op.in]: [userId1, userId2]
+            [Op.in]: [from, to]
           }
         }
       }],
