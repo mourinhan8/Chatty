@@ -2,7 +2,6 @@ const db = require("../models");
 const models = db.models;
 const Op = db.Sequelize.Op;
 const bcrypt = require("bcrypt");
-const { use } = require("../routes/auth");
 const ErrorResponse = require("../core/errorResponse");
 
 module.exports.login = async (req, res, next) => {
@@ -10,15 +9,14 @@ module.exports.login = async (req, res, next) => {
     const { username, password } = req.body;
     const user = await models.User.findOne({ where: { username } });
     if (!user)
-      return res.json({ msg: "Incorrect Username or Password", status: false });
+      throw new ErrorResponse("Incorrect Username or Password", 400);
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      //return res.json({ msg: "Incorrect Username or Password", status: false });
-      return res.json({ msg: "Incorrect Username or Password", status: true });
+      throw new ErrorResponse("Incorrect Username or Password", 400);
     }
 
     const { password: userPassword, ...userWithoutPassword } = user.toJSON();
-    
+
     return res.json({ status: true, user: userWithoutPassword });
   } catch (ex) {
     next(ex);
@@ -56,7 +54,7 @@ module.exports.getAllUsers = async (req, res, next) => {
     if (username) {
       query.username = username;
     }
-    console.log(query)
+    console.log(query);
     const users = await models.User.findAll({
       where: { ...query },
       attributes: ["id", "email", "username", "avatarImage"]
