@@ -18,16 +18,15 @@ module.exports.singleConversation = async (req, res, next) => {
       where: {
         type: "single",
       },
-      include: [
-        {
-          model: models.User,
-          where: { id: from }
+      include: [{
+        model: models.User,
+        through: {
+          attributes: []
         },
-        {
-          model: models.User,
-          where: { id: to }
+        where: {
+          id: [from, to]
         }
-      ],
+      }],
     });
 
     if (!conversation) {
@@ -84,7 +83,7 @@ module.exports.getGroup = async (req, res, next) => {
       }
     });
     if (!convData) {
-      throw new ErrorResponse('Group not exist', 400)
+      throw new ErrorResponse('Group not exist', 400);
     }
     let users = (await convData.getUsers()).map((user) => {
       const { password, UserConversation, ...data } = user.toJSON();
