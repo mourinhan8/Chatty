@@ -29,7 +29,7 @@ module.exports.singleConversation = async (req, res, next) => {
           }
         }
       }],
-      group: ['Conversation.id'],
+      group: ['conversations.id'],
       having: db.sequelize.literal(`COUNT(DISTINCT "users"."id") = 2`)
     });
 
