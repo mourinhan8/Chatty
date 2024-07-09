@@ -19,14 +19,18 @@ module.exports.singleConversation = async (req, res, next) => {
         type: "single",
       },
       include: [{
-        model: models.User,
+        model: User,
         through: {
           attributes: []
         },
         where: {
-          id: [from, to]
+          id: {
+            [Op.in]: [userId1, userId2]
+          }
         }
       }],
+      group: ['Conversation.id'],
+      having: sequelize.literal(`COUNT(DISTINCT "users"."id") = 2`)
     });
 
     if (!conversation) {
