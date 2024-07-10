@@ -37,6 +37,7 @@ module.exports.singleConversation = async (req, res, next) => {
           attributes: [],
         },
       }],
+      from: models.Conversation
     });
 
     if (!conversation) {
