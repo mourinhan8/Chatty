@@ -20,6 +20,7 @@ module.exports.singleConversation = async (req, res, next) => {
           where: { id: to }
         }
       ],
+      limit: 1
     }))[0];
 
     if (!conversation) {
