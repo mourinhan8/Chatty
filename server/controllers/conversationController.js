@@ -10,7 +10,7 @@ module.exports.singleConversation = async (req, res, next) => {
     if (!user2) {
       throw new ErrorResponse("User 2 not found", 400);
     }
-    let conversation = await user.getConversations({
+    let conversation = (await user.getConversations({
       where: {
         type: "single",
       },
@@ -20,7 +20,7 @@ module.exports.singleConversation = async (req, res, next) => {
           where: { id: to }
         }
       ],
-    });
+    }))[0];
 
     if (!conversation) {
       conversation = await db.sequelize.transaction(async (t) => {
