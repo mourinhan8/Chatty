@@ -6,45 +6,27 @@ const Op = db.Sequelize.Op;
 module.exports.singleConversation = async (req, res, next) => {
   const { from, to } = req.body;
   try {
-    const users = await models.User.findAll({
-      where: {
-        id: [from, to]
-      },
-    });
-    if (users.length < 2) {
+    const [user, user2] = await Promise.all([models.User.findByPk(from), models.User.findByPk(to)]);
+    if (!user2) {
       throw new ErrorResponse("User 2 not found", 400);
     }
-    let conversation = await models.Conversation.findOne({
+    let conversation = await user.getConversations({
       where: {
-        type: 'single',
-        [Op.and]: [
-          {
-            '$user_conversation.userId$': from,
-          },
-          {
-            '$user_conversation.userId$': to,
-          },
-        ],
+        type: "single",
       },
-      include: [{
-        model: models.User,
-        as: "Users",
-        through: {
-          attributes: ['id', 'name']
-        },
-        through: {
-          model: models.UserConversation,
-          attributes: [],
-        },
-      }],
-      from: models.Conversation
+      include: [
+        {
+          model: models.User,
+          where: { id: to }
+        }
+      ],
     });
 
     if (!conversation) {
       conversation = await db.sequelize.transaction(async (t) => {
         const conversation = await models.Conversation.create({}, { transaction: t });
 
-        await conversation.addUsers(users, { transaction: t });
+        await conversation.addUsers([user, user2], { transaction: t });
 
         return conversation;
       });
