@@ -16,21 +16,27 @@ module.exports.singleConversation = async (req, res, next) => {
     }
     let conversation = await models.Conversation.findOne({
       where: {
-        type: "single",
+        type: 'single',
+        [Op.and]: [
+          {
+            '$user_conversation.userId$': from,
+          },
+          {
+            '$user_conversation.userId$': to,
+          },
+        ],
       },
       include: [{
         model: models.User,
+        as: "Users",
         through: {
-          attributes: []
+          attributes: ['id', 'name']
         },
-        where: {
-          id: {
-            [Op.in]: [from, to]
-          }
-        }
+        through: {
+          model: models.UserConversation,
+          attributes: [],
+        },
       }],
-      group: ['conversations.id'],
-      having: db.sequelize.literal(`COUNT(DISTINCT "users"."id") = 2`)
     });
 
     if (!conversation) {
