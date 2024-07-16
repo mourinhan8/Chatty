@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
@@ -53,9 +53,9 @@ export default function Chat() {
   const handleOpenCreateConversation = () => {
     setOpenCreateConversation(true);
   };
-  const handleCloseCreateConversation = () => {
+  const handleCloseCreateConversation = useCallback(() => {
     setOpenCreateConversation(false);
-  };
+  }, []);
   const handleSetConversation = (data) => {
     setConvId(data);
   };

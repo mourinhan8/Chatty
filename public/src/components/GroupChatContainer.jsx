@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
 import ChatInput from "./ChatInput";
 import Logout from "./Logout";
@@ -9,11 +9,22 @@ import {
   recieveMessageRoute,
   getGroupConversation
 } from "../utils/APIRoutes";
+import GroupMemberModal from "./GroupMemberModal";
 
 export default function GroupChatContainer({ convId, socket }) {
   const [messages, setMessages] = useState([]);
   const scrollRef = useRef();
   const [convData, setConvData] = useState();
+  const [members, setMembers] = useState([]);
+  const [isOpenGroupMembers, setIsOpenGroupMembers] = useState(false);
+
+  const handleOpenGroupMembers = () => {
+    setIsOpenGroupMembers(true);
+  };
+  const handleCloseGroupMembers = useCallback(() => {
+    setIsOpenGroupMembers(false);
+
+  }, []);
 
   const fetchChatData = async () => {
     const data = await JSON.parse(
@@ -24,9 +35,8 @@ export default function GroupChatContainer({ convId, socket }) {
       convId
     });
     setConvData(conversationData.data.convData);
-    console.log(conversationData.data.convData);
+    setMembers(conversationData.data.users);
     const id = conversationData.data.convData.id;
-    console.log(id);
     socket.current.emit("join-Conv", { convId: id, userId: data.id });
     const messages = await axios.post(recieveMessageRoute, {
       from: data.id,
@@ -85,6 +95,9 @@ export default function GroupChatContainer({ convId, socket }) {
           <div className="username">
             <h3>{convData?.name}</h3>
           </div>
+          <p className="group-members" onClick={handleOpenGroupMembers}>
+            see group members
+          </p>
         </div>
         <Logout />
       </div>
@@ -105,6 +118,11 @@ export default function GroupChatContainer({ convId, socket }) {
         })}
       </div>
       <ChatInput handleSendMsg={handleSendMsg} />
+      <GroupMemberModal
+        isOpen={isOpenGroupMembers}
+        onClose={handleCloseGroupMembers}
+        members={members}
+      />
     </Container>
   );
 }
@@ -136,6 +154,11 @@ const Container = styled.div`
         h3 {
           color: AliceBlue;
         }
+      }
+      .group-members {
+        color: #a4a4f3;
+        text-decoration: underline;
+        cursor: pointer;
       }
     }
   }

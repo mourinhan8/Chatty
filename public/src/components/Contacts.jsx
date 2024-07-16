@@ -157,10 +157,10 @@ const TabButton = styled.button`
   font-weight: bold;
   transition: background-color 0.3s;
   &.active {
-    background-color: #ddd;
+    background-color: #8190a4;
   }
   &:hover {
-    background-color: #eee;
+    background-color: #c5daf7;
   }
 `;
 
