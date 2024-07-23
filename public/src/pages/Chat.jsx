@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
@@ -19,6 +19,15 @@ export default function Chat() {
   const [openCreateConversation, setOpenCreateConversation] = useState(false);
   const [convId, setConvId] = useState(undefined);
   const [type, setType] = useState(undefined);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+
+  const usersWithStatus = useMemo(() => {
+    return contacts.map((user) => ({
+      ...user,
+      status: onlineUsers.includes(user.id) ? "online" : "offline",
+    }));
+  }, [contacts, onlineUsers]);
+
   useEffect(async () => {
     if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
       navigate("/login");
@@ -34,7 +43,15 @@ export default function Chat() {
     if (currentUser) {
       socket.current = io(host);
       socket.current.emit("add-user", currentUser.id);
+      socket.current.on("onlineUsers", (users) => {
+        setOnlineUsers(users);
+      });
     }
+    return () => {
+      if (socket.current) {
+        socket.current.disconnect();
+      }
+    };
   }, [currentUser]);
 
   useEffect(async () => {
@@ -67,7 +84,8 @@ export default function Chat() {
       <Container>
         <div className="container">
           <Contacts
-            contacts={contacts}
+            contacts={usersWithStatus}
+            socket={socket}
             changeChat={handleChatChange}
             handleOpenCreateConversation={handleOpenCreateConversation}
             onSetType={handleSetType}

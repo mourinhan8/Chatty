@@ -5,10 +5,18 @@ import { BiConversation } from "react-icons/bi";
 import axios from "axios";
 import { getAllGroupOfUser } from "../utils/APIRoutes";
 
-export default function Contacts({ contacts, changeChat, handleOpenCreateConversation, onSetType, onSetConv }) {
+export default function Contacts({
+  contacts,
+  changeChat,
+  handleOpenCreateConversation,
+  onSetType,
+  onSetConv,
+  socket
+}) {
   const [currentUserName, setCurrentUserName] = useState(undefined);
   const [currentUserImage, setCurrentUserImage] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined);
+
   const [tab, setTab] = useState('single');
   const [groups, setGroups] = useState([]);
 
@@ -83,6 +91,7 @@ export default function Contacts({ contacts, changeChat, handleOpenCreateConvers
                     src={`data:image/svg+xml;base64,${contact.avatarImage}`}
                     alt=""
                   />
+                  <StatusDot status={contact?.status} isSetAvt={contact?.isAvatarImageSet} />
                 </div>
                 <div className="username">
                   <h3>{contact?.username}</h3>
@@ -145,6 +154,26 @@ const Button = styled.button`
     font-size: 1.3rem;
     color: #ebe7ff;
   }
+`;
+
+const StatusDot = styled.div`
+  position: absolute;
+  bottom: ${({ isSetAvt }) => isSetAvt ? '5px' : '0px'};
+  right: ${({ isSetAvt }) => isSetAvt ? '2px' : '0px'};
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: ${({ status }) => {
+    switch (status) {
+      case 'online':
+        return 'green';
+      case 'offline':
+        return 'gray';
+      default:
+        return 'gray';
+    }
+  }};
+  border: 2px solid white;
 `;
 
 const TabButton = styled.button`
@@ -217,6 +246,7 @@ const Container = styled.div`
       align-items: center;
       transition: 0.5s ease-in-out;
       .avatar {
+        position: relative;
         img {
           height: 3rem;
         }

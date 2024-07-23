@@ -95,7 +95,8 @@ async function init() {
   io.on("connection", (socket) => {
     global.chatSocket = socket;
     socket.on("add-user", (userId) => {
-      onlineUsers.set(userId, socket.id);
+      onlineUsers.set(socket.id, userId);
+      io.emit("onlineUsers", Array.from(onlineUsers.values()));
     });
 
     socket.on('join-Conv', async ({ convId, userId }) => {
@@ -110,6 +111,12 @@ async function init() {
 
     socket.on("send-msg", (data) => {
       socket.to(data.to).emit("msg-recieve", data.msg);
+    });
+    socket.on('disconnect', () => {
+      console.log('User disconnected:', socket.id);
+      onlineUsers.delete(socket.id);
+      io.emit('onlineUsers', Array.from(onlineUsers.values()));
+      console.log('Online Users:', onlineUsers);
     });
   });
 }

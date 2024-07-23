@@ -60,7 +60,7 @@ module.exports.getAllUsers = async (req, res, next) => {
     console.log(query);
     const users = await models.User.findAll({
       where: { ...query },
-      attributes: ["id", "email", "username", "avatarImage"]
+      attributes: ["id", "email", "username", "avatarImage", "isAvatarImageSet"],
     });
     return res.json(users);
   } catch (ex) {
