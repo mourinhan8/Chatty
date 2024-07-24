@@ -6,7 +6,14 @@ import { FaPlus } from 'react-icons/fa';
 const UserCard = ({ user, onAdd }) => {
   return (
     <CardContainer>
-      <Avatar src={user?.avatarImage} alt={`${user?.name}'s avatar`} />
+      <Avatar
+        src={`data:image/svg+xml;base64,${user?.avatarImage}`}
+        alt={`${user?.name}'s avatar`}
+      />
+      <StatusDot
+        status={user?.status}
+        isSetAvt={user?.isAvatarImageSet}
+      />
       <UserInfo>
         <UserName>{user?.username}</UserName>
       </UserInfo>
@@ -23,6 +30,7 @@ const UserCard = ({ user, onAdd }) => {
 
 const CardContainer = styled.div`
   display: flex;
+  position: relative;
   align-items: center;
   background: #f9f9f9;
   padding: 5px 10px;
@@ -56,6 +64,26 @@ const AddButton = styled.button`
   color: #007bff;
   cursor: pointer;
   font-size: 1.5rem;
+`;
+
+const StatusDot = styled.div`
+  position: absolute;
+  bottom: ${({ isSetAvt }) => isSetAvt ? '5px' : '0px'};
+  right: ${({ isSetAvt }) => isSetAvt ? '2px' : '0px'};
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: ${({ status }) => {
+    switch (status) {
+      case 'online':
+        return 'green';
+      case 'offline':
+        return 'gray';
+      default:
+        return 'gray';
+    }
+  }};
+  border: 2px solid white;
 `;
 
 export default UserCard;

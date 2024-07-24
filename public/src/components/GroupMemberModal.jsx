@@ -40,21 +40,6 @@ const CloseButton = styled.button`
   cursor: pointer;
 `;
 
-const listUser = [
-    {
-        id: 1,
-        name: 'John Doe',
-        username: 'johndoe',
-        avatar: 'https://i.pravatar.cc/300?img=1',
-    },
-    {
-        id: 2,
-        name: 'Jane Doe',
-        username: 'janedoe',
-        avatar: 'https://i.pravatar.cc/300?img=2',
-    },
-];
-
 const GroupMemberModal = ({ isOpen, onClose, members }) => {
 
     React.useEffect(() => {
@@ -82,7 +67,7 @@ const GroupMemberModal = ({ isOpen, onClose, members }) => {
                     <Title>Group's members</Title>
                     <CloseButton onClick={onClose}>&times;</CloseButton>
                 </Header>
-                {members.map((member) => <UserCard user={member} />)}
+                {members?.map((member) => <UserCard user={member} />)}
             </ModalContainer>
         </ModalBackground>
     );

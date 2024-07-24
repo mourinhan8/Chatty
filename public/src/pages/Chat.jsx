@@ -96,7 +96,11 @@ export default function Chat() {
           ) : (
             type === 'single' ?
               (<SingleChatContainer currentChat={currentChat} socket={socket} />) :
-              (<GroupChatContainer convId={convId} socket={socket} />)
+                (<GroupChatContainer
+                  onlineUsers={onlineUsers}
+                  convId={convId}
+                  socket={socket}
+                />)
           )}
           <CreateConversationModal
             isOpen={openCreateConversation}

@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import styled from "styled-components";
 import ChatInput from "./ChatInput";
 import Logout from "./Logout";
@@ -11,7 +17,7 @@ import {
 } from "../utils/APIRoutes";
 import GroupMemberModal from "./GroupMemberModal";
 
-export default function GroupChatContainer({ convId, socket }) {
+export default function GroupChatContainer({ convId, socket, onlineUsers }) {
   const [messages, setMessages] = useState([]);
   const scrollRef = useRef();
   const [convData, setConvData] = useState();
@@ -44,6 +50,13 @@ export default function GroupChatContainer({ convId, socket }) {
     });
     setMessages(messages.data);
   };
+
+  const memberWithStatus = useMemo(() => {
+    return members.map((member) => ({
+      ...member,
+      status: onlineUsers.includes(member.id) ? "online" : "offline",
+    }));
+  }, [members, onlineUsers]);
 
   useEffect(() => {
     fetchChatData();
@@ -121,7 +134,7 @@ export default function GroupChatContainer({ convId, socket }) {
       <GroupMemberModal
         isOpen={isOpenGroupMembers}
         onClose={handleCloseGroupMembers}
-        members={members}
+        members={memberWithStatus}
       />
     </Container>
   );
